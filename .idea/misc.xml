@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/dialog_style_xml_color.xml" value="0.23697916666666666" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/loading_process_dialog_color.xml" value="0.23697916666666666" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/shap_progress_bg.xml" value="0.23697916666666666" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/activity_catalogue.xml" value="0.1671195652173913" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/activity_main.xml" value="0.17074275362318841" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/activity_read.xml" value="0.13994565217391305" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/book_intro.xml" value="0.1" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/chaper_text_item.xml" value="0.17798913043478262" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/xml/network_security_config.xml" value="0.11594202898550725" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
