@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NetWorkBookReader</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">书库</string>
+    <string name="title_search">搜索</string>
+    <string name="title_notifications">书架</string>
 </resources>
