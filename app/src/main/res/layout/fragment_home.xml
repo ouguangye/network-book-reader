@@ -39,7 +39,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pagination_rcv" />
+        app:layout_constraintTop_toBottomOf="@+id/pagination_rcv"
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:transcriptMode="alwaysScroll"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="true"
+        android:scrollbarStyle="insideInset"
+        android:scrollingCache="false"
+        />
 
     <com.lwy.paginationlib.PaginationRecycleView
         android:id="@+id/pagination_rcv"
