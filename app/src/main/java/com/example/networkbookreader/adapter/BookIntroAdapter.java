@@ -1,4 +1,4 @@
-package com.example.networkbookreader;
+package com.example.networkbookreader.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.networkbookreader.BookIntro;
+import com.example.networkbookreader.R;
 
 import java.util.List;
 

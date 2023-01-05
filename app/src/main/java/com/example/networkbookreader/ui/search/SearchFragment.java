@@ -11,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.dyhdyh.widget.loading.bar.LoadingBar;
+import com.dyhdyh.widget.loadingbar.LoadingBar;
 import com.example.networkbookreader.BookIntro;
-import com.example.networkbookreader.BookIntroAdapter;
+import com.example.networkbookreader.adapter.BookIntroAdapter;
 import com.example.networkbookreader.CatalogueActivity;
 import com.example.networkbookreader.databinding.FragmentSearchBinding;
 
@@ -41,7 +41,7 @@ public class SearchFragment extends Fragment {
                     public boolean onQueryTextSubmit(String s) {
                         searchViewModel.searchBook(s);
                         searchView.clearFocus();
-                        LoadingBar.make(binding.bookList).show();
+                        LoadingBar.show(binding.bookList);
                         return true;
                     }
                     @Override

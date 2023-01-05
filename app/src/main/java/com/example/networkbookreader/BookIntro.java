@@ -1,5 +1,7 @@
 package com.example.networkbookreader;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class BookIntro implements Serializable {
@@ -45,5 +47,18 @@ public class BookIntro implements Serializable {
 
     public String getBookUrl() {
         return bookUrl;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "BookIntro{" +
+                "name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", detail='" + detail + '\'' +
+                ", author='" + author + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", bookUrl='" + bookUrl + '\'' +
+                '}';
     }
 }
