@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    android:layout_height="match_parent">
 
     <SearchView
         android:id="@+id/searchView"
@@ -17,26 +16,62 @@
         android:queryHint="请输入要搜索的小说名字"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <ListView
-        android:id="@+id/book_list"
+    </SearchView>
+
+    <LinearLayout
+        android:id="@+id/history_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        android:paddingStart="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView"
+        tools:ignore="RtlSymmetry">
 
-        android:divider="@null"
-        android:dividerHeight="10dp"
-        android:transcriptMode="alwaysScroll"
-        android:fadingEdge="none"
-        android:fastScrollEnabled="true"
-        android:scrollbarStyle="insideInset"
-        android:scrollingCache="false"
-        />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_history_title" />
+
+        <LinearLayout
+            android:id="@+id/ll_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/history_linearlayout">
+
+        <ListView
+            android:id="@+id/book_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:divider="@null"
+            android:dividerHeight="10dp"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="true"
+
+            android:scrollbarStyle="insideInset"
+            android:scrollingCache="false"
+            android:transcriptMode="alwaysScroll">
+
+        </ListView>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
