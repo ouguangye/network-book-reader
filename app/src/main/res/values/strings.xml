@@ -7,4 +7,7 @@
     <string name="choose_type">请选择小说类型</string>
     <string name="search_history_title">搜索历史</string>
     <string name="end_book_type">完结</string>
+    <string name="read_button_text">开始阅读</string>
+    <string name="add_button_text">加入书架</string>
+    <string name="caalogue_title">章节目录</string>
 </resources>
