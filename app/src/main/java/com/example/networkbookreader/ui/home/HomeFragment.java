@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -27,6 +28,7 @@ public class HomeFragment extends Fragment {
     private String type = "玄幻奇幻";
     private boolean type_change = true;
     private int page = 1;
+    private boolean isEnd = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class HomeFragment extends Fragment {
                 String new_type = binding.spinner.getItemAtPosition(i).toString();
                 if (!new_type.equals(type)) {
                     type = new_type;
-                    homeViewModel.getBookList(type, page);
+                    homeViewModel.getBookList(type, isEnd,page);
                     type_change = true;
                     LoadingBar.show(binding.bookList);
                 }
@@ -86,7 +88,7 @@ public class HomeFragment extends Fragment {
             public void loadMore(int currentPagePosition, int nextPagePosition, int perPageCount, int dataTotalCount) {
                 page = currentPagePosition + 1;
                 if (page != 1) {
-                    homeViewModel.getBookList(type, page);
+                    homeViewModel.getBookList(type, isEnd, page);
                 }
             }
 
@@ -96,7 +98,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        homeViewModel.getBookList(type, page);
+        // 选择全本
+        binding.checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
+            isEnd = b;
+            homeViewModel.getBookList(type, isEnd, page);
+        });
+
+        homeViewModel.getBookList(type, isEnd, page);
         LoadingBar.show(binding.bookList);
         return binding.getRoot();
     }

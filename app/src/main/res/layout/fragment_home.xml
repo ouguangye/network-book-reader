@@ -12,23 +12,30 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingStart="5dp"
-            android:paddingTop="5dp"
             tools:ignore="RtlSymmetry"
             android:layout_alignParentTop="true"
             >
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="50dp"
-                android:layout_weight="1"
-                android:text="@string/choose_type" />
+                android:text="@string/choose_type"
+                android:singleLine="true"
+                />
 
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/end_book_type" />
         </LinearLayout>
 
         <com.lwy.paginationlib.PaginationRecycleView
@@ -48,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="25dp"
+            android:paddingTop="35dp"
             android:paddingBottom="5dp"
             android:layout_alignParentTop="true"
             android:layout_above="@+id/pagination_rcv"

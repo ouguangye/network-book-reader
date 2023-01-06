@@ -50,10 +50,10 @@ public class HomeViewModel extends ViewModel {
         return type;
     }
 
-    public void getBookList(String typeString, int page) {
+    public void getBookList(String typeString, boolean isEnd, int page) {
         new Thread(() -> {
             try {
-                String url  = "https://www.xxbiqu.com/sort/" + type.get(typeString) +"/"+ page +"/";
+                String url  = "https://www.xxbiqu.com/" + (isEnd ? "quanben" :"sort") + "/" + type.get(typeString) +"/"+ page +"/";
                 Document doc = Jsoup.connect(url).get();
 
                 String a  = doc.select(".pages .pagelink a").last().attr("href");
