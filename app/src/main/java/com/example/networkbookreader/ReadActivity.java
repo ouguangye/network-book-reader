@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +29,8 @@ public class ReadActivity extends AppCompatActivity {
     private String preUrl;
     private String nextUrl;
 
+    private BottomSheetDialog bottomSheetDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +44,15 @@ public class ReadActivity extends AppCompatActivity {
         Button nextButton = findViewById(R.id.next_button);
         preButton.setOnClickListener(view -> getContent(preUrl));
         nextButton.setOnClickListener(view -> getContent(nextUrl));
+
+        bottomSheetDialog = new BottomSheetDialog(ReadActivity.this);
+        @SuppressLint("InflateParams") View dialogView = LayoutInflater.from(ReadActivity.this).inflate(R.layout.read_book_dialog, null);
+        bottomSheetDialog.setContentView(dialogView);
+
+        ScrollView scrollView = findViewById(R.id.scrollView);
+        scrollView.setOnClickListener(view -> {
+            bottomSheetDialog.show();
+        });
     }
 
     @SuppressLint("HandlerLeak")
