@@ -32,7 +32,7 @@ public abstract class BookInfoDatabase extends RoomDatabase {
     }
 
     public boolean isDataExit(BookIntro bookIntro) {
-        return getBookIntroDao().isDataExit(bookIntro.getBook_id()).size() != 0;
+        return getBookIntroDao().isDataExit(bookIntro.getName()).size() != 0;
     }
 
     private static BookInfoDatabase INSTANCE;

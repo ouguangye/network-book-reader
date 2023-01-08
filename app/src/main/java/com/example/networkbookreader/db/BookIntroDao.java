@@ -12,8 +12,8 @@ public interface BookIntroDao {
     @Query("select * from BookInfo")
     List<BookIntro> getAll();
 
-    @Query("select * from BookInfo where book_id = :id")
-    List<BookIntro> isDataExit(int id);
+    @Query("select * from BookInfo where name = :name")
+    List<BookIntro> isDataExit(String name);
 
     @Insert
     void insertAll(BookIntro... bookIntros);
