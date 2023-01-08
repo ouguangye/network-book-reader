@@ -9,5 +9,8 @@
     <string name="end_book_type">完结</string>
     <string name="read_button_text">开始阅读</string>
     <string name="add_button_text">加入书架</string>
-    <string name="caalogue_title">章节目录</string>
+    <string name="catalogue_title">章节目录</string>
+    <string name="content_loading">内容加载中...</string>
+    <string name="last_chapter">上一章</string>
+    <string name="next_chapter">下一章</string>
 </resources>
