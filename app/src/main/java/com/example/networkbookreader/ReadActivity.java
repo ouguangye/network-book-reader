@@ -51,7 +51,6 @@ public class ReadActivity extends AppCompatActivity {
 
                 TextView contentTextView = findViewById(R.id.content);
                 contentTextView.setText(content);
-                // contentTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
                 ScrollView scrollView = findViewById(R.id.scrollView);
                 scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_UP));
@@ -72,7 +71,7 @@ public class ReadActivity extends AppCompatActivity {
                 Elements content_list = doc.select("article p");
                 content = "";
                 for(Element i : content_list) {
-                    content += (i.text() + '\n');
+                    content = content.concat("  "+i.text() + '\n');
                 }
 
                 Elements urls = doc.select(".read_nav a");
