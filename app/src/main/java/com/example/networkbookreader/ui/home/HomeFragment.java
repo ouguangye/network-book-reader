@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.dyhdyh.widget.loadingbar.LoadingBar;
-import com.example.networkbookreader.BookIntro;
+import com.example.networkbookreader.db.BookIntro;
 import com.example.networkbookreader.CatalogueActivity;
 import com.example.networkbookreader.R;
 import com.example.networkbookreader.adapter.BookIntroAdapter;

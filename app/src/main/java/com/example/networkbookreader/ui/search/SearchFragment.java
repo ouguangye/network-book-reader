@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.dyhdyh.widget.loadingbar.LoadingBar;
-import com.example.networkbookreader.BookIntro;
+import com.example.networkbookreader.db.BookIntro;
 import com.example.networkbookreader.CatalogueActivity;
 import com.example.networkbookreader.R;
 import com.example.networkbookreader.adapter.BookIntroAdapter;

@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/dialog_style_xml_color.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic__06__.xml" value="0.23697916666666666" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic_bookshelf_black.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/loading_process_dialog_color.xml" value="0.23697916666666666" />
@@ -17,7 +18,9 @@
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/activity_search.xml" value="0.13722826086956522" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/activity_tabbar.xml" value="0.16757246376811594" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/book_intro.xml" value="0.1" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/bookshelf_book_item.xml" value="0.1381340579710145" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/chaper_text_item.xml" value="0.17798913043478262" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/fragment_bookshelf.xml" value="0.1431159420289855" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/fragment_dashboard.xml" value="0.13722826086956522" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/fragment_search.xml" value="0.13043478260869565" />

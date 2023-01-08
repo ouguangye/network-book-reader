@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.networkbookreader.BookIntro;
+import com.example.networkbookreader.db.BookIntro;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
