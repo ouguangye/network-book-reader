@@ -42,7 +42,7 @@ public class ReadActivity extends AppCompatActivity{
 
     // 监听 滑动条拖动是否完成
     private int lastProgress = 0;
-    
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
