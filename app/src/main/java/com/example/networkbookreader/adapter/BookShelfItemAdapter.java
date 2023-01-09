@@ -14,11 +14,9 @@ import com.example.networkbookreader.db.BookIntro;
 
 import java.util.List;
 
-public class BookShelfItemAdapter extends BookIntroAdapter {
+public class BookShelfItemAdapter extends MyAdapter {
     public BookShelfItemAdapter(Context mContext, List<BookIntro> list) {
         super(mContext, list);
-        this.list = list;
-        this.mContext = mContext;
     }
 
     @Override
@@ -36,8 +34,10 @@ public class BookShelfItemAdapter extends BookIntroAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.name.setText(list.get(i).getName());
-        Glide.with(mContext).load(list.get(i).getImgUrl()).placeholder(R.drawable.no_cover)
+        BookIntro bookIntro = (BookIntro) list.get(i);
+
+        viewHolder.name.setText(bookIntro.getName());
+        Glide.with(mContext).load(bookIntro.getImgUrl()).placeholder(R.drawable.no_cover)
                 .diskCacheStrategy(DiskCacheStrategy.NONE).into(viewHolder.cover);
 
         return view;

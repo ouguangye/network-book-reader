@@ -8,7 +8,6 @@ import android.os.Message;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dyhdyh.widget.loadingbar.LoadingBar;
+import com.example.networkbookreader.adapter.ChapterItemAdapter;
 import com.example.networkbookreader.db.BookInfoDatabase;
 import com.example.networkbookreader.db.BookIntro;
+import com.example.networkbookreader.vo.ChapterItem;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,13 +29,11 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CatalogueActivity extends AppCompatActivity {
     private BookIntro bookIntro;
-    private ArrayList<HashMap<String,String>> chapter_list;
+    private ArrayList<ChapterItem> chapter_list;
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +48,7 @@ public class CatalogueActivity extends AppCompatActivity {
         title.setText(bookIntro.getName());
 
         TextView author = findViewById(R.id.author);
-        author.setText("作者：" + bookIntro.getAuthor());
+        author.setText(String.format("作者：%s", bookIntro.getAuthor()));
 
         Button add_button = findViewById(R.id.add_button);
         add_button.setOnClickListener(view ->{
@@ -72,10 +71,10 @@ public class CatalogueActivity extends AppCompatActivity {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                SimpleAdapter myAdapter=new SimpleAdapter(getApplicationContext(),chapter_list,R.layout.chaper_text_item,new String[]{"name"},new int[]{R.id.chapterText});
+                ChapterItemAdapter chapterItemAdapter = new ChapterItemAdapter(getApplicationContext(), chapter_list);
                 GridView gridView = findViewById(R.id.grid);
-                gridView.setAdapter(myAdapter);
-                gridView.setOnItemClickListener((adapterView, view, i, l) -> jumpToReadActivity((HashMap<String, String>) adapterView.getAdapter().getItem(i)));
+                gridView.setAdapter(chapterItemAdapter);
+                gridView.setOnItemClickListener((adapterView, view, i, l) -> jumpToReadActivity((ChapterItem) adapterView.getAdapter().getItem(i)));
                 Button read_button = findViewById(R.id.read_button);
                 read_button.setOnClickListener(view -> jumpToReadActivity(chapter_list.get(0)));
                 LoadingBar.cancel(findViewById(R.id.grid));
@@ -83,11 +82,13 @@ public class CatalogueActivity extends AppCompatActivity {
         }
     };
 
-    private void jumpToReadActivity(HashMap<String,String> hashMap) {
+    private void jumpToReadActivity(ChapterItem chapterItem) {
         Intent intent = new Intent(getApplicationContext(), ReadActivity.class);
-        intent.putExtra("href", hashMap.get("href"));
+        intent.putExtra("href", chapterItem.getHref());
+        intent.putParcelableArrayListExtra("list", chapter_list);
         startActivity(intent);
     }
+
 
     private void getCatalogue() {
         new Thread(()->{
@@ -96,10 +97,7 @@ public class CatalogueActivity extends AppCompatActivity {
                 Elements result_list = doc.select("#ul_all_chapters li a");
                 chapter_list = new ArrayList<>();
                 for(Element i : result_list) {
-                    HashMap<String,String> hashMap = new HashMap<>();
-                    hashMap.put("href",i.attr("href"));
-                    hashMap.put("name",i.text().trim());
-                    chapter_list.add(hashMap);
+                    chapter_list.add(new ChapterItem(i.attr("href"), i.text().trim()));
                 }
                 Message msg = new Message();
                 msg.what = 1;

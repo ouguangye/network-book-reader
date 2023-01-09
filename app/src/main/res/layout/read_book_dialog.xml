@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,30 +9,26 @@
         android:id="@+id/pre_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_weight="1"
         android:text="@string/last_chapter"
-        style="?android:attr/buttonBarButtonStyle" />
+        style="?android:attr/buttonBarButtonStyle"
+        />
 
     <SeekBar
         android:id="@+id/progress"
-        android:layout_width="match_parent"
+        android:layout_width="210dp"
         android:layout_height="wrap_content"
-        android:maxHeight="2dp"
-        android:minHeight="2dp"
-        android:paddingBottom="3dp"
-        android:paddingLeft="12dp"
-        android:max="200"
-        android:paddingRight="12dp"
-        android:paddingTop="3dp"
+        android:maxHeight="6dp"
+        android:minHeight="6dp"
         android:progressDrawable="@drawable/layer_progress"
-        android:thumb="@drawable/shape_circle" />
+        android:thumb="@drawable/shape_circle"
+        android:paddingTop="12dp"
+        />
 
     <Button
         android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="@string/next_chapter"
-        style="?android:attr/buttonBarButtonStyle" />
+        style="?android:attr/buttonBarButtonStyle"
+        />
 </LinearLayout>

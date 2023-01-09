@@ -4,41 +4,21 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.networkbookreader.db.BookIntro;
 import com.example.networkbookreader.R;
+import com.example.networkbookreader.db.BookIntro;
 
 import java.util.List;
 
-public class BookIntroAdapter extends BaseAdapter {
-    protected List<BookIntro> list;
-    protected Context mContext;
-
+public class BookIntroAdapter extends MyAdapter {
     public BookIntroAdapter(Context mContext, List<BookIntro> list) {
-        this.list = list;
-        this.mContext = mContext;
+        super(mContext, list);
     }
-
-    @Override
-    public int getCount() {
-        return list.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return list.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
+    
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
@@ -57,11 +37,12 @@ public class BookIntroAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.name.setText(list.get(i).getName());
-        viewHolder.author.setText(list.get(i).getAuthor());
-        viewHolder.detail.setText(list.get(i).getDetail());
-        viewHolder.type.setText(list.get(i).getType());
-        Glide.with(mContext).load(list.get(i).getImgUrl()).placeholder(R.drawable.no_cover)
+        BookIntro bookIntro = (BookIntro) list.get(i);
+        viewHolder.name.setText(bookIntro.getName());
+        viewHolder.author.setText(bookIntro.getAuthor());
+        viewHolder.detail.setText(bookIntro.getDetail());
+        viewHolder.type.setText(bookIntro.getType());
+        Glide.with(mContext).load(bookIntro.getImgUrl()).placeholder(R.drawable.no_cover)
                 .diskCacheStrategy(DiskCacheStrategy.NONE).into(viewHolder.cover);
 
         return view;
