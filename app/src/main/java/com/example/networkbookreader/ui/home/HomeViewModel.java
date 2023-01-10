@@ -23,6 +23,7 @@ public class HomeViewModel extends ViewModel {
     private int max_page;
     private MutableLiveData<List<BookIntro>> result_list;
     private final HashMap<String,String> type;
+    private boolean isOnlyOnePage = false;
 
     public HomeViewModel() {
         max_page = 0;
@@ -42,6 +43,14 @@ public class HomeViewModel extends ViewModel {
         this.max_page = max_page;
     }
 
+    public void setOnlyOnePage(boolean onlyOnePage) {
+        isOnlyOnePage = onlyOnePage;
+    }
+
+    public boolean isOnlyOnePage() {
+        return isOnlyOnePage;
+    }
+
     public MutableLiveData<List<BookIntro>> getResult_list() {
         return result_list;
     }
@@ -52,13 +61,17 @@ public class HomeViewModel extends ViewModel {
 
     public void getBookList(String typeString, boolean isEnd) {
         int page = (int) (Math.random()*max_page) + 1;
+        Log.d("myPage",String.valueOf(page));
+        Log.d("MaxPage", String.valueOf(max_page));
         new Thread(() -> {
             try {
                 String url  = "https://www.xxbiqu.com/" + (isEnd ? "quanben" :"sort") + "/" + type.get(typeString) +"/"+ page +"/";
                 Document doc = Jsoup.connect(url).get();
-
+                Log.d("url", url);
                 String a  = doc.select(".pages .pagelink a").last().attr("href");
                 max_page = getContainsNum(a);
+                Log.d("getMaxPage", String.valueOf(max_page));
+                isOnlyOnePage = (max_page == 0);
 
                 List<BookIntro> myList = new ArrayList<>();
 
@@ -88,6 +101,8 @@ public class HomeViewModel extends ViewModel {
         String regExp="[^0-9]"; // 反向字符集。匹配未包含的数字，替换着里面的数字
         Pattern pattern = Pattern.compile(regExp);
         Matcher matcher = pattern.matcher(str);
-        return Integer.parseInt(matcher.replaceAll("").trim());
+        String num = matcher.replaceAll("").trim();
+        if (num.equals("")) return 0;
+        return Integer.parseInt(num);
     }
 }

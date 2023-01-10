@@ -8,24 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.PluralsRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.networkbookreader.db.BookIntro;
 import com.example.networkbookreader.CatalogueActivity;
 import com.example.networkbookreader.R;
 import com.example.networkbookreader.adapter.BookIntroAdapter;
 import com.example.networkbookreader.databinding.FragmentHomeBinding;
+import com.example.networkbookreader.db.BookIntro;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private String type = "玄幻奇幻";
-    private boolean type_change = true;
     private boolean isEnd = false;
     private HomeViewModel homeViewModel;
     private ProgressDialog dialog;
@@ -48,8 +46,8 @@ public class HomeFragment extends Fragment {
                 if (!new_type.equals(type)) {
                     type = new_type;
                     homeViewModel.setMax_page(0);
+                    homeViewModel.setOnlyOnePage(false);
                     homeViewModel.getBookList(type, isEnd);
-                    type_change = true;
                     dialog = ProgressDialog.show(getContext(), "", "加载中", true);
                 }
             }
@@ -78,12 +76,17 @@ public class HomeFragment extends Fragment {
         binding.checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
             isEnd = b;
             homeViewModel.setMax_page(0);
+            homeViewModel.setOnlyOnePage(false);
             homeViewModel.getBookList(type, isEnd);
             dialog = ProgressDialog.show(getContext(), "", "加载中", true);
         });
 
         // 刷新小说
         binding.refresh.setOnClickListener(view -> {
+            if(homeViewModel.isOnlyOnePage()) {
+                Toast.makeText(getContext(), "抱歉，资源有限",Toast.LENGTH_SHORT).show();
+                return;
+            }
             homeViewModel.getBookList(type,isEnd);
             dialog = ProgressDialog.show(getContext(), "", "加载中", true);
         });
