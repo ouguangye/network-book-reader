@@ -94,13 +94,12 @@ public class ReadActivity extends AppCompatActivity{
 
         SeekBar seekBar = bottomSheetDialog.findViewById(R.id.progress);
         TextView progressText = bottomSheetDialog.findViewById(R.id.seek_text);
-        Objects.requireNonNull(seekBar).setMax(chapter_list.size());
+        Objects.requireNonNull(seekBar).setMax(chapter_list.size()-1);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @SuppressLint("DefaultLocale")
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 lastProgress = i;
-
                 //设置文本显示
                 Objects.requireNonNull(progressText).setText(chapter_list.get(i).getName().split(" ")[0]);
                 //获取文本宽度
@@ -110,7 +109,7 @@ public class ReadActivity extends AppCompatActivity{
                 //进度条的刻度值
                 float max =Math.abs(seekBar.getMax());
                 //这不叫thumb的宽度,叫seekbar距左边宽度,实验了一下，seekbar 不是顶格的，两头都存在一定空间，所以xml 需要用paddingStart 和 paddingEnd 来确定具体空了多少值,我这里设置15dp;
-                float thumb = dip2px(bottomSheetDialog.getContext(),15);
+                float thumb = dip2px(bottomSheetDialog.getContext(),25);
                 //每移动1个单位，text应该变化的距离 = (seekBar的宽度 - 两头空的空间) / 总的progress长度
                 float average = (((float) seekBar.getWidth())-2*thumb)/max;
                 //textview 应该所处的位置 = seekbar最左端 + seekbar左端空的空间 + 当前progress应该加的长度 - textview宽度的一半(保持居中作用)

@@ -39,8 +39,8 @@
             android:minHeight="6dp"
             android:progressDrawable="@drawable/layer_progress"
             android:thumb="@drawable/shape_circle"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
             />
     </LinearLayout>
 
