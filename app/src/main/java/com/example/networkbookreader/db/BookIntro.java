@@ -17,6 +17,7 @@ public class BookIntro implements Serializable {
     private String author;
     private String imgUrl;
     private String bookUrl;
+    private int readProgress;
 
     public BookIntro(String name, String type, String detail, String author, String imgUrl, String bookUrl) {
         this.name = name;
@@ -25,6 +26,7 @@ public class BookIntro implements Serializable {
         this.author = author;
         this.imgUrl = imgUrl;
         this.bookUrl = bookUrl;
+        this.readProgress = 0;
     }
 
     public int getBook_id() {
@@ -81,6 +83,14 @@ public class BookIntro implements Serializable {
 
     public void setBookUrl(String bookUrl) {
         this.bookUrl = bookUrl;
+    }
+
+    public int getReadProgress() {
+        return readProgress;
+    }
+
+    public void setReadProgress(int readProgress) {
+        this.readProgress = readProgress;
     }
 
     @NonNull

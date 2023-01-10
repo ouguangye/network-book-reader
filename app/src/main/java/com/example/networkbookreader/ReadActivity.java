@@ -13,10 +13,12 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.networkbookreader.db.BookInfoDatabase;
 import com.example.networkbookreader.vo.ChapterItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -30,6 +32,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ReadActivity extends AppCompatActivity{
+    private ArrayList<ChapterItem> chapter_list;
+    private int chapter_num;
+    private String book_name;
+
     private String content;
     private String title;
     private String preUrl;
@@ -50,10 +56,10 @@ public class ReadActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read);
 
-        String url = getIntent().getStringExtra("href");
-        getContent(url);
-
-        ArrayList<ChapterItem> chapter_list = getIntent().getParcelableArrayListExtra("list");
+        chapter_list = getIntent().getParcelableArrayListExtra("list");
+        chapter_num = getIntent().getIntExtra("i",0);
+        book_name = getIntent().getStringExtra("name");
+        getContent(chapter_list.get(chapter_num).getHref());
 
         bottomSheetDialog = new BottomSheetDialog(ReadActivity.this);
         @SuppressLint("InflateParams") View dialogView = LayoutInflater.from(ReadActivity.this).inflate(R.layout.read_book_dialog, null);
@@ -63,10 +69,20 @@ public class ReadActivity extends AppCompatActivity{
         Button preButton = bottomSheetDialog.findViewById(R.id.pre_button);
         Button nextButton = bottomSheetDialog.findViewById(R.id.next_button);
         Objects.requireNonNull(preButton).setOnClickListener(view -> {
+            if (chapter_num == 0) {
+                Toast.makeText(getApplicationContext(), "这已经是第一章了", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            chapter_num -= 1;
             getContent(preUrl);
             bottomSheetDialog.cancel();
         });
         Objects.requireNonNull(nextButton).setOnClickListener(view -> {
+            if (chapter_num == chapter_list.size()-1){
+                Toast.makeText(getApplicationContext(), "这已经是最后一章了", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            chapter_num += 1;
             getContent(nextUrl);
             bottomSheetDialog.cancel();
         });
@@ -122,6 +138,7 @@ public class ReadActivity extends AppCompatActivity{
             }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                chapter_num = lastProgress;
                 getContent(chapter_list.get(lastProgress).getHref());
             }
         });
@@ -142,7 +159,8 @@ public class ReadActivity extends AppCompatActivity{
                 ScrollView scrollView = findViewById(R.id.scrollView);
                 scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_UP));
 
-                Log.d("content", content);
+                BookInfoDatabase bookInfoDatabase = BookInfoDatabase.getInstance(getApplicationContext());
+                bookInfoDatabase.updateBookReadProgressFromName(book_name, chapter_num);
             }
         }
     };

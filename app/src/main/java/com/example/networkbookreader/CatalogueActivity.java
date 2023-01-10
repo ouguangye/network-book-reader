@@ -34,11 +34,15 @@ public class CatalogueActivity extends AppCompatActivity {
     private BookIntro bookIntro;
     private ArrayList<ChapterItem> chapter_list;
     private ProgressDialog dialog;
+    private Button read_button;
+    private BookInfoDatabase bookInfoDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalogue);
+
+        bookInfoDatabase = BookInfoDatabase.getInstance(getApplicationContext());
 
         bookIntro = (BookIntro) getIntent().getSerializableExtra("book");
 
@@ -53,7 +57,6 @@ public class CatalogueActivity extends AppCompatActivity {
 
         Button add_button = findViewById(R.id.add_button);
         add_button.setOnClickListener(view ->{
-            BookInfoDatabase bookInfoDatabase = BookInfoDatabase.getInstance(getApplicationContext());
             if(bookInfoDatabase.isDataExit(bookIntro)){
                 Toast.makeText(getApplicationContext(), "该书籍已被添加进书架", Toast.LENGTH_SHORT).show();
                 return;
@@ -61,6 +64,9 @@ public class CatalogueActivity extends AppCompatActivity {
             bookInfoDatabase.getBookIntroDao().insertAll(bookIntro);
             Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
         });
+
+        read_button = findViewById(R.id.read_button);
+        read_button.setText(bookInfoDatabase.isRead(bookIntro)? "继续阅读":"开始阅读");
     }
 
     @Override
@@ -79,17 +85,20 @@ public class CatalogueActivity extends AppCompatActivity {
                 ChapterItemAdapter chapterItemAdapter = new ChapterItemAdapter(getApplicationContext(), chapter_list);
                 GridView gridView = findViewById(R.id.grid);
                 gridView.setAdapter(chapterItemAdapter);
-                gridView.setOnItemClickListener((adapterView, view, i, l) -> jumpToReadActivity((ChapterItem) adapterView.getAdapter().getItem(i)));
-                Button read_button = findViewById(R.id.read_button);
-                read_button.setOnClickListener(view -> jumpToReadActivity(chapter_list.get(0)));
+                gridView.setOnItemClickListener((adapterView, view, i, l) -> jumpToReadActivity(i));
+                read_button.setOnClickListener(view -> {
+                    bookIntro = bookInfoDatabase.getBookIntroDao().getDataFromName(bookIntro.getName());
+                    jumpToReadActivity(bookIntro.getReadProgress());
+                });
                 dialog.dismiss();
             }
         }
     };
 
-    private void jumpToReadActivity(ChapterItem chapterItem) {
+    private void jumpToReadActivity(int i) {
         Intent intent = new Intent(getApplicationContext(), ReadActivity.class);
-        intent.putExtra("href", chapterItem.getHref());
+        intent.putExtra("i",i);
+        intent.putExtra("name", bookIntro.getName());
         intent.putParcelableArrayListExtra("list", chapter_list);
         startActivity(intent);
     }
