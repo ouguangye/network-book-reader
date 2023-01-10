@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -18,36 +19,55 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-
-import com.example.networkbookreader.db.BookIntro;
 import com.example.networkbookreader.CatalogueActivity;
+import com.example.networkbookreader.MainViewModel;
 import com.example.networkbookreader.R;
 import com.example.networkbookreader.adapter.BookIntroAdapter;
-import com.example.networkbookreader.databinding.FragmentSearchBinding;
+import com.example.networkbookreader.db.BookIntro;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
-
+    private MainViewModel mainViewModel;
     private SearchViewModel searchViewModel;
-    private FragmentSearchBinding binding;
     private ProgressDialog dialog;
+    private View root = null;
+
+    private SearchView searchView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        searchViewModel = mainViewModel.getSearchViewModel();
+        if (searchViewModel == null) {
+            searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+            mainViewModel.setSearchViewModel(searchViewModel);
+        }
 
-        binding = FragmentSearchBinding.inflate(inflater, container, false);
+        root=mainViewModel.getSearchView().getValue();
+        if(root==null){
+            root = inflater.inflate(R.layout.fragment_search, container, false);
+        }
+
+        ListView bookList = root.findViewById(R.id.book_list);
+        bookList.setOnItemClickListener((adapterView, view, i, l) -> {
+                BookIntro bookIntro = (BookIntro) adapterView.getAdapter().getItem(i);
+                Intent intent = new Intent(getContext(), CatalogueActivity.class);
+                intent.putExtra("book", bookIntro);
+                startActivity(intent);
+            }
+        );
 
         searchViewModel.getSearch_list().observe(getViewLifecycleOwner(),list->{
             BookIntroAdapter bookIntroAdapter = new BookIntroAdapter(getContext(), list);
-            binding.bookList.setAdapter(bookIntroAdapter);
-            dialog.dismiss();
+            bookList.setAdapter(bookIntroAdapter);
+            if (dialog != null) dialog.dismiss();
         });
 
-        binding.searchView.setOnQueryTextListener(
+        searchView = root.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(
                 new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String s) {
@@ -62,35 +82,32 @@ public class SearchFragment extends Fragment {
                 }
         );
 
-        binding.bookList.setOnItemClickListener((adapterView, view, i, l) -> {
-                BookIntro bookIntro = (BookIntro) adapterView.getAdapter().getItem(i);
-                Intent intent = new Intent(getContext(), CatalogueActivity.class);
-                intent.putExtra("book", bookIntro);
-                startActivity(intent);
-            }
-        );
-
         initAutoLL();
-        return binding.getRoot();
+        return root;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        ViewGroup parent = (ViewGroup) root.getParent();
+        if(parent!=null){
+            parent.removeView(root);
+        }
+        mainViewModel.setSearchView(root);
     }
 
     private void searchEvent(String s) {
         saveSearchHistory(s);
         initAutoLL();
         searchViewModel.searchBook(s);
-        binding.searchView.clearFocus();
+        searchView.clearFocus();
         dialog = ProgressDialog.show(getContext(), "", "加载中", true);
     }
 
     private void initAutoLL() {
+        LinearLayout llParent = root.findViewById(R.id.ll_parent);
         List<String> data = getSearchHistory();
-        binding.llParent.removeAllViews();
+        llParent.removeAllViews();
 
         // 每一行的布局，初始化第一行布局
         LinearLayout rowLL = new LinearLayout(getContext());
@@ -112,7 +129,7 @@ public class SearchFragment extends Fragment {
             //  若当前为新起的一行，先添加旧的那行
             //  然后重新创建布局对象，设置参数，将isNewLayout判断重置为false
             if (isNewLayout) {
-                binding.llParent.addView(rowLL);
+                llParent.addView(rowLL);
                 rowLL = new LinearLayout(getContext());
                 rowLL.setLayoutParams(rowLP);
                 isNewLayout = false;
@@ -128,7 +145,7 @@ public class SearchFragment extends Fragment {
 
             // 若是一整行都放不下这个文本框，添加旧的那行，新起一行添加这个文本框
             if (maxWidth < textView.getMeasuredWidth()) {
-                binding.llParent.addView(rowLL);
+                llParent.addView(rowLL);
                 rowLL = new LinearLayout(getContext());
                 rowLL.setLayoutParams(rowLP);
                 rowLL.addView(textView);
@@ -154,7 +171,7 @@ public class SearchFragment extends Fragment {
         }
 
         // 添加最后一行，但要防止重复添加
-        binding.llParent.addView(rowLL);
+        llParent.addView(rowLL);
     }
 
     // dp转px
