@@ -1,5 +1,6 @@
 package com.example.networkbookreader.ui.home;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,31 +8,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.PluralsRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.dyhdyh.widget.loadingbar.LoadingBar;
 import com.example.networkbookreader.db.BookIntro;
 import com.example.networkbookreader.CatalogueActivity;
 import com.example.networkbookreader.R;
 import com.example.networkbookreader.adapter.BookIntroAdapter;
-import com.example.networkbookreader.adapter.PageAdapter;
 import com.example.networkbookreader.databinding.FragmentHomeBinding;
-import com.lwy.paginationlib.PaginationRecycleView;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private String type = "玄幻奇幻";
     private boolean type_change = true;
-    private int page = 1;
     private boolean isEnd = false;
+    private HomeViewModel homeViewModel;
+    private ProgressDialog dialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
@@ -46,9 +47,10 @@ public class HomeFragment extends Fragment {
                 String new_type = binding.spinner.getItemAtPosition(i).toString();
                 if (!new_type.equals(type)) {
                     type = new_type;
-                    homeViewModel.getBookList(type, isEnd,page);
+                    homeViewModel.setMax_page(0);
+                    homeViewModel.getBookList(type, isEnd);
                     type_change = true;
-                    LoadingBar.show(binding.bookList);
+                    dialog = ProgressDialog.show(getContext(), "", "加载中", true);
                 }
             }
 
@@ -61,16 +63,7 @@ public class HomeFragment extends Fragment {
         homeViewModel.getResult_list().observe(getViewLifecycleOwner(), list->{
             BookIntroAdapter bookIntroAdapter = new BookIntroAdapter(getContext(), list);
             binding.bookList.setAdapter(bookIntroAdapter);
-            LoadingBar.cancelAll();
-            binding.paginationRcv.setState(PaginationRecycleView.SUCCESS);
-        });
-
-        homeViewModel.getMax_page().observe(getViewLifecycleOwner(), m->{
-            if(!type_change) return;
-            type_change = false;
-            PageAdapter pageAdapter = new PageAdapter(getContext(), m);
-            binding.paginationRcv.setAdapter(pageAdapter);
-            binding.paginationRcv.setPerPageCountChoices(new int[]{30});
+            dialog.dismiss();
         });
 
         binding.bookList.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -81,31 +74,28 @@ public class HomeFragment extends Fragment {
             }
         );
 
-        // 分页
-        binding.paginationRcv.setListener(new PaginationRecycleView.Listener() {
-            @Override
-            public void loadMore(int currentPagePosition, int nextPagePosition, int perPageCount, int dataTotalCount) {
-                page = currentPagePosition + 1;
-                if (page != 1) {
-                    homeViewModel.getBookList(type, isEnd, page);
-                }
-            }
-
-            @Override
-            public void onPerPageCountChanged(int perPageCount) {
-
-            }
-        });
-
         // 选择全本
         binding.checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
             isEnd = b;
-            homeViewModel.getBookList(type, isEnd, page);
+            homeViewModel.setMax_page(0);
+            homeViewModel.getBookList(type, isEnd);
+            dialog = ProgressDialog.show(getContext(), "", "加载中", true);
         });
 
-        homeViewModel.getBookList(type, isEnd, page);
-        LoadingBar.show(binding.bookList);
+        // 刷新小说
+        binding.refresh.setOnClickListener(view -> {
+            homeViewModel.getBookList(type,isEnd);
+            dialog = ProgressDialog.show(getContext(), "", "加载中", true);
+        });
+
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        homeViewModel.getBookList(type, isEnd);
+        dialog = ProgressDialog.show(getContext(), "", "加载中", true);
     }
 
     @Override

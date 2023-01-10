@@ -1,6 +1,7 @@
 package com.example.networkbookreader;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.dyhdyh.widget.loadingbar.LoadingBar;
 import com.example.networkbookreader.adapter.ChapterItemAdapter;
 import com.example.networkbookreader.db.BookInfoDatabase;
 import com.example.networkbookreader.db.BookIntro;
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 public class CatalogueActivity extends AppCompatActivity {
     private BookIntro bookIntro;
     private ArrayList<ChapterItem> chapter_list;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +61,13 @@ public class CatalogueActivity extends AppCompatActivity {
             bookInfoDatabase.getBookIntroDao().insertAll(bookIntro);
             Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         getCatalogue();
-        LoadingBar.show(findViewById(R.id.grid));
+        dialog = ProgressDialog.show(CatalogueActivity.this, "", "加载中", true);
     }
 
     @SuppressLint("HandlerLeak")
@@ -77,7 +82,7 @@ public class CatalogueActivity extends AppCompatActivity {
                 gridView.setOnItemClickListener((adapterView, view, i, l) -> jumpToReadActivity((ChapterItem) adapterView.getAdapter().getItem(i)));
                 Button read_button = findViewById(R.id.read_button);
                 read_button.setOnClickListener(view -> jumpToReadActivity(chapter_list.get(0)));
-                LoadingBar.cancel(findViewById(R.id.grid));
+                dialog.dismiss();
             }
         }
     };

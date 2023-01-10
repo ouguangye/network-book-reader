@@ -38,18 +38,6 @@
                 android:text="@string/end_book_type" />
         </LinearLayout>
 
-        <com.lwy.paginationlib.PaginationRecycleView
-            android:id="@+id/pagination_rcv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            app:number_tip_count="3"
-            app:rect_size="30dp"
-            app:selected_color="@color/indicator_rect_selected"
-            app:text_size="14sp"
-            app:unselected_color="@color/indicator_rect_unselected"
-            android:layout_alignParentBottom="true" />
-
         <LinearLayout
             android:id="@+id/bookLayout"
             android:layout_width="match_parent"
@@ -58,8 +46,8 @@
             android:paddingTop="35dp"
             android:paddingBottom="5dp"
             android:layout_alignParentTop="true"
-            android:layout_above="@+id/pagination_rcv"
             android:layout_below="@+id/linearLayout"
+            android:layout_above="@+id/refresh"
             >
             <ListView
                 android:id="@+id/book_list"
@@ -76,4 +64,32 @@
                 android:transcriptMode="alwaysScroll"
                 />
         </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="5dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="5dp"
+            app:srcCompat="@drawable/ic_refresh_purple" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/try_another_batch"
+            android:textColor="#b4a0ff" />
+    </LinearLayout>
     </RelativeLayout>

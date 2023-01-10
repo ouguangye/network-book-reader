@@ -20,12 +20,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HomeViewModel extends ViewModel {
-    private MutableLiveData<Integer> max_page;
+    private int max_page;
     private MutableLiveData<List<BookIntro>> result_list;
     private final HashMap<String,String> type;
 
     public HomeViewModel() {
-        max_page = new MutableLiveData<>();
+        max_page = 0;
         result_list = new MutableLiveData<>();
 
         type = new HashMap<>();
@@ -38,8 +38,8 @@ public class HomeViewModel extends ViewModel {
         type.put("女频同人","tongren");
     }
 
-    public MutableLiveData<Integer> getMax_page() {
-        return max_page;
+    public void setMax_page(int max_page) {
+        this.max_page = max_page;
     }
 
     public MutableLiveData<List<BookIntro>> getResult_list() {
@@ -50,14 +50,15 @@ public class HomeViewModel extends ViewModel {
         return type;
     }
 
-    public void getBookList(String typeString, boolean isEnd, int page) {
+    public void getBookList(String typeString, boolean isEnd) {
+        int page = (int) (Math.random()*max_page) + 1;
         new Thread(() -> {
             try {
                 String url  = "https://www.xxbiqu.com/" + (isEnd ? "quanben" :"sort") + "/" + type.get(typeString) +"/"+ page +"/";
                 Document doc = Jsoup.connect(url).get();
 
                 String a  = doc.select(".pages .pagelink a").last().attr("href");
-                max_page.postValue(getContainsNum(a));
+                max_page = getContainsNum(a);
 
                 List<BookIntro> myList = new ArrayList<>();
 

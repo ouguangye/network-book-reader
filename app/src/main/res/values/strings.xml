@@ -13,4 +13,5 @@
     <string name="content_loading">内容加载中...</string>
     <string name="last_chapter">上一章</string>
     <string name="next_chapter">下一章</string>
+    <string name="try_another_batch">没有心仪的书籍？ 换一批试试</string>
 </resources>

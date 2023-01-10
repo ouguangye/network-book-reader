@@ -1,6 +1,7 @@
 package com.example.networkbookreader.ui.search;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.dyhdyh.widget.loadingbar.LoadingBar;
+
 import com.example.networkbookreader.db.BookIntro;
 import com.example.networkbookreader.CatalogueActivity;
 import com.example.networkbookreader.R;
@@ -32,6 +33,7 @@ public class SearchFragment extends Fragment {
 
     private SearchViewModel searchViewModel;
     private FragmentSearchBinding binding;
+    private ProgressDialog dialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class SearchFragment extends Fragment {
         searchViewModel.getSearch_list().observe(getViewLifecycleOwner(),list->{
             BookIntroAdapter bookIntroAdapter = new BookIntroAdapter(getContext(), list);
             binding.bookList.setAdapter(bookIntroAdapter);
-            LoadingBar.cancel(binding.bookList);
+            dialog.dismiss();
         });
 
         binding.searchView.setOnQueryTextListener(
@@ -83,7 +85,7 @@ public class SearchFragment extends Fragment {
         initAutoLL();
         searchViewModel.searchBook(s);
         binding.searchView.clearFocus();
-        LoadingBar.show(binding.bookList);
+        dialog = ProgressDialog.show(getContext(), "", "加载中", true);
     }
 
     private void initAutoLL() {
