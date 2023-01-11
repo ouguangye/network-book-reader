@@ -64,6 +64,7 @@
         tools:ignore="RtlSymmetry">
 
         <LinearLayout
+            android:id="@+id/catalogue_linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

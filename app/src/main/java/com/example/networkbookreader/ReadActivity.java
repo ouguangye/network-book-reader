@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -18,11 +19,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.networkbookreader.adapter.ChapterItemAdapter;
 import com.example.networkbookreader.db.BookInfoDatabase;
 import com.example.networkbookreader.vo.ChapterItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,6 +48,7 @@ public class ReadActivity extends AppCompatActivity{
     private String nextUrl;
 
     // 相关ui组件
+    private DrawerLayout drawerLayout;
     private BottomSheetDialog bottomSheetDialog;
     private ScrollView scrollView;
     private TextView title_textview;
@@ -75,6 +79,8 @@ public class ReadActivity extends AppCompatActivity{
         @SuppressLint("InflateParams") View dialogView = LayoutInflater.from(ReadActivity.this).inflate(R.layout.read_book_dialog, null);
         bottomSheetDialog.setContentView(dialogView);
 
+        drawerLayout = findViewById(R.id.drawer_layout);
+
         // scrollView 点击触发 底部弹窗出现
         scrollView = findViewById(R.id.scrollView);
         scrollView.setOnTouchListener((v, event) -> {
@@ -95,6 +101,17 @@ public class ReadActivity extends AppCompatActivity{
                     break;
             }
             return false;
+        });
+
+        // 侧边栏 目录渲染
+        ListView listView = findViewById(R.id.catalogue_listview);
+        ChapterItemAdapter chapterItemAdapter = new ChapterItemAdapter(getApplicationContext(), chapter_list);
+        chapterItemAdapter.setTextSize(15);
+        listView.setAdapter(chapterItemAdapter);
+        listView.setOnItemClickListener((adapterView, view, i, l)->{
+            chapter_num = i;
+            getContent(chapter_list.get(i).getHref());
+            drawerLayout.closeDrawers();
         });
 
         /* 底部弹窗点击事件 */
@@ -124,6 +141,7 @@ public class ReadActivity extends AppCompatActivity{
         SeekBar seekBar = bottomSheetDialog.findViewById(R.id.progress);
         TextView progressText = bottomSheetDialog.findViewById(R.id.seek_text);
         Objects.requireNonNull(seekBar).setMax(chapter_list.size()-1);
+        seekBar.setProgress(chapter_num);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @SuppressLint("DefaultLocale")
             @Override
@@ -179,7 +197,13 @@ public class ReadActivity extends AppCompatActivity{
                 Objects.requireNonNull(textView).setText("夜间模式");
             }
         });
-        
+
+        // 底部弹窗 目录
+        LinearLayout catalogue_linearLayout = bottomSheetDialog.findViewById(R.id.catalogue_linearLayout);
+        Objects.requireNonNull(catalogue_linearLayout).setOnClickListener(view->{
+            drawerLayout.openDrawer(GravityCompat.START);
+            bottomSheetDialog.dismiss();
+        });
     }
 
     @SuppressLint("HandlerLeak")
