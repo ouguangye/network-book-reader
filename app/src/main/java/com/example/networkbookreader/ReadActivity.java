@@ -5,11 +5,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.networkbookreader.db.BookInfoDatabase;
 import com.example.networkbookreader.vo.ChapterItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ReadActivity extends AppCompatActivity{
+    // 相关属性
     private ArrayList<ChapterItem> chapter_list;
     private int chapter_num;
     private String book_name;
@@ -41,7 +44,11 @@ public class ReadActivity extends AppCompatActivity{
     private String preUrl;
     private String nextUrl;
 
+    // 相关ui组件
     private BottomSheetDialog bottomSheetDialog;
+    private ScrollView scrollView;
+    private TextView title_textview;
+    private TextView contentTextView;
 
     // 监听 scrollView的滑动大小
     private int lastX = 0;
@@ -49,6 +56,9 @@ public class ReadActivity extends AppCompatActivity{
 
     // 监听 滑动条拖动是否完成
     private int lastProgress = 0;
+
+    // 判断是否进黑暗模式
+    private boolean isNightMode = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -65,7 +75,30 @@ public class ReadActivity extends AppCompatActivity{
         @SuppressLint("InflateParams") View dialogView = LayoutInflater.from(ReadActivity.this).inflate(R.layout.read_book_dialog, null);
         bottomSheetDialog.setContentView(dialogView);
 
-        // 按钮点击事件
+        // scrollView 点击触发 底部弹窗出现
+        scrollView = findViewById(R.id.scrollView);
+        scrollView.setOnTouchListener((v, event) -> {
+            int y = (int) event.getY();
+            int x = (int) event.getX();
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    // 记录触摸点坐标
+                    lastY = y;
+                    lastX = x;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (Math.abs(y - lastY) < 5 && Math.abs(x - lastX) <5) {
+                        bottomSheetDialog.show();
+                    }
+                    break;
+            }
+            return false;
+        });
+
+        /* 底部弹窗点击事件 */
+        // 底部弹窗 上一章、下一章按钮点击事件
         Button preButton = bottomSheetDialog.findViewById(R.id.pre_button);
         Button nextButton = bottomSheetDialog.findViewById(R.id.next_button);
         Objects.requireNonNull(preButton).setOnClickListener(view -> {
@@ -87,27 +120,7 @@ public class ReadActivity extends AppCompatActivity{
             bottomSheetDialog.cancel();
         });
 
-        ScrollView scrollView = findViewById(R.id.scrollView);
-        scrollView.setOnTouchListener((v, event) -> {
-            int y = (int) event.getY();
-            int x = (int) event.getX();
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    // 记录触摸点坐标
-                    lastY = y;
-                    lastX = x;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    break;
-                case MotionEvent.ACTION_UP:
-                    if (Math.abs(y - lastY) < 5 && Math.abs(x - lastX) <5) {
-                        bottomSheetDialog.show();
-                    }
-                    break;
-            }
-            return false;
-        });
-
+        // 底部弹窗 滑动条拖动事件
         SeekBar seekBar = bottomSheetDialog.findViewById(R.id.progress);
         TextView progressText = bottomSheetDialog.findViewById(R.id.seek_text);
         Objects.requireNonNull(seekBar).setMax(chapter_list.size()-1);
@@ -142,6 +155,31 @@ public class ReadActivity extends AppCompatActivity{
                 getContent(chapter_list.get(lastProgress).getHref());
             }
         });
+
+        // 底部弹窗 夜间模式点击事件
+        LinearLayout night_linearLayout = bottomSheetDialog.findViewById(R.id.night_mode_linearLayout);
+        Objects.requireNonNull(night_linearLayout).setOnClickListener(view -> {
+            isNightMode = !isNightMode;
+            ImageView imageView = bottomSheetDialog.findViewById(R.id.night_icon);
+            TextView textView = bottomSheetDialog.findViewById(R.id.night_text);
+            if (isNightMode) {
+                scrollView.setBackgroundColor(getResources().getColor(R.color.black));
+                title_textview.setTextColor(getResources().getColor(R.color.white));
+                contentTextView.setTextColor(getResources().getColor(R.color.white));
+
+                Objects.requireNonNull(imageView).setImageResource(R.drawable.ic_day);
+                Objects.requireNonNull(textView).setText("白天模式");
+            }
+            else {
+                scrollView.setBackgroundColor(getResources().getColor(R.color.white));
+                title_textview.setTextColor(getResources().getColor(R.color.black));
+                contentTextView.setTextColor(getResources().getColor(R.color.black));
+
+                Objects.requireNonNull(imageView).setImageResource(R.drawable.ic_night);
+                Objects.requireNonNull(textView).setText("夜间模式");
+            }
+        });
+        
     }
 
     @SuppressLint("HandlerLeak")
@@ -150,10 +188,10 @@ public class ReadActivity extends AppCompatActivity{
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                TextView title_textview = findViewById(R.id.title);
+                title_textview = findViewById(R.id.title);
                 title_textview.setText(title);
 
-                TextView contentTextView = findViewById(R.id.content);
+                contentTextView = findViewById(R.id.content);
                 contentTextView.setText(content);
 
                 ScrollView scrollView = findViewById(R.id.scrollView);

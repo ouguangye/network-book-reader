@@ -25,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:gravity="center_horizontal"
-        android:textColor="#1D1D1C"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/cover"
         app:layout_constraintTop_toTopOf="@id/cover"
