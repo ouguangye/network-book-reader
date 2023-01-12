@@ -17,4 +17,7 @@
     <string name="catalogue">目录</string>
     <string name="night_mode">夜间模式</string>
     <string name="more_setting">更多设置</string>
+    <string name="set_text_size">设置文字大小</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_confirm">确定</string>
 </resources>

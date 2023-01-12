@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.networkbookreader.adapter.ChapterItemAdapter;
+import com.example.networkbookreader.component.SettingDialog;
 import com.example.networkbookreader.db.BookInfoDatabase;
 import com.example.networkbookreader.vo.ChapterItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -50,6 +52,7 @@ public class ReadActivity extends AppCompatActivity{
     // 相关ui组件
     private DrawerLayout drawerLayout;
     private BottomSheetDialog bottomSheetDialog;
+    private SettingDialog settingDialog;
     private ScrollView scrollView;
     private TextView title_textview;
     private TextView contentTextView;
@@ -75,11 +78,17 @@ public class ReadActivity extends AppCompatActivity{
         book_name = getIntent().getStringExtra("name");
         getContent(chapter_list.get(chapter_num).getHref());
 
+        contentTextView = findViewById(R.id.content);
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        // 初始字体大小
+        final int content_text_size = 17;
+        contentTextView.setTextSize(content_text_size);
+
+        // 底部弹窗初始化
         bottomSheetDialog = new BottomSheetDialog(ReadActivity.this);
         @SuppressLint("InflateParams") View dialogView = LayoutInflater.from(ReadActivity.this).inflate(R.layout.read_book_dialog, null);
         bottomSheetDialog.setContentView(dialogView);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
 
         // scrollView 点击触发 底部弹窗出现
         scrollView = findViewById(R.id.scrollView);
@@ -112,6 +121,15 @@ public class ReadActivity extends AppCompatActivity{
             chapter_num = i;
             getContent(chapter_list.get(i).getHref());
             drawerLayout.closeDrawers();
+        });
+
+        // 更多设置 弹窗
+        settingDialog = new SettingDialog(ReadActivity.this);
+        settingDialog.setTextSize(content_text_size);
+        settingDialog.setConfirmClickListener(view1 -> {
+            Log.d("confirm textSize", String.valueOf(settingDialog.getTextSize()));
+            contentTextView.setTextSize(settingDialog.getTextSize());
+            settingDialog.dismiss();
         });
 
         /* 底部弹窗点击事件 */
@@ -204,6 +222,13 @@ public class ReadActivity extends AppCompatActivity{
             drawerLayout.openDrawer(GravityCompat.START);
             bottomSheetDialog.dismiss();
         });
+
+        // 底部弹窗 更多设置
+        LinearLayout more_linearLayout = bottomSheetDialog.findViewById(R.id.more_setting_linearLayout);
+        Objects.requireNonNull(more_linearLayout).setOnClickListener(view -> {
+            bottomSheetDialog.dismiss();
+            settingDialog.show();
+        });
     }
 
     @SuppressLint("HandlerLeak")
@@ -215,7 +240,6 @@ public class ReadActivity extends AppCompatActivity{
                 title_textview = findViewById(R.id.title);
                 title_textview.setText(title);
 
-                contentTextView = findViewById(R.id.content);
                 contentTextView.setText(content);
 
                 ScrollView scrollView = findViewById(R.id.scrollView);
