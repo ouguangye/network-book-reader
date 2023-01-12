@@ -2,10 +2,10 @@ package com.example.networkbookreader;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,6 +49,8 @@ public class ReadActivity extends AppCompatActivity{
     private String preUrl;
     private String nextUrl;
 
+    private SharedPreferences.Editor editor;
+
     // 相关ui组件
     private DrawerLayout drawerLayout;
     private BottomSheetDialog bottomSheetDialog;
@@ -73,16 +75,21 @@ public class ReadActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read);
 
+        // 接收上一个页面传输的数据
         chapter_list = getIntent().getParcelableArrayListExtra("list");
         chapter_num = getIntent().getIntExtra("i",0);
         book_name = getIntent().getStringExtra("name");
         getContent(chapter_list.get(chapter_num).getHref());
 
+        // 对相关属性的储存
+        SharedPreferences sharedPreferences = getSharedPreferences("data_storage", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
         contentTextView = findViewById(R.id.content);
         drawerLayout = findViewById(R.id.drawer_layout);
 
         // 初始字体大小
-        final int content_text_size = 17;
+        final int content_text_size = sharedPreferences.getInt("textSize",17);
         contentTextView.setTextSize(content_text_size);
 
         // 底部弹窗初始化
@@ -125,10 +132,11 @@ public class ReadActivity extends AppCompatActivity{
 
         // 更多设置 弹窗
         settingDialog = new SettingDialog(ReadActivity.this);
-        settingDialog.setTextSize(content_text_size);
         settingDialog.setConfirmClickListener(view1 -> {
-            Log.d("confirm textSize", String.valueOf(settingDialog.getTextSize()));
-            contentTextView.setTextSize(settingDialog.getTextSize());
+            int text_size = settingDialog.getTextSize();
+            contentTextView.setTextSize(text_size);
+            editor.putInt("textSize", text_size);
+            editor.commit();
             settingDialog.dismiss();
         });
 
@@ -227,6 +235,7 @@ public class ReadActivity extends AppCompatActivity{
         LinearLayout more_linearLayout = bottomSheetDialog.findViewById(R.id.more_setting_linearLayout);
         Objects.requireNonNull(more_linearLayout).setOnClickListener(view -> {
             bottomSheetDialog.dismiss();
+            settingDialog.setTextSize(px2sp(getApplicationContext(),contentTextView.getTextSize()));
             settingDialog.show();
         });
     }
@@ -283,4 +292,8 @@ public class ReadActivity extends AppCompatActivity{
         return (int) (dpValue * scale + 0.5f);
     }
 
+    public int px2sp(Context context,float pxValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
 }
