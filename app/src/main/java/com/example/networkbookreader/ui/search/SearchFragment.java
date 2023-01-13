@@ -24,6 +24,7 @@ import com.example.networkbookreader.MainViewModel;
 import com.example.networkbookreader.R;
 import com.example.networkbookreader.adapter.BookIntroAdapter;
 import com.example.networkbookreader.db.BookIntro;
+import com.example.networkbookreader.util.UnitTransformation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,17 +114,17 @@ public class SearchFragment extends Fragment {
         LinearLayout rowLL = new LinearLayout(getContext());
         LinearLayout.LayoutParams rowLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
-        float rowMargin = dipToPx(10);
+        float rowMargin = new UnitTransformation(getContext()).dip2px(10);
         rowLP.setMargins(0, (int) rowMargin, 0, 0);
         rowLL.setLayoutParams(rowLP);
         boolean isNewLayout = false;
-        float maxWidth = getScreenWidth() - dipToPx(30);
+        float maxWidth = getScreenWidth() - new UnitTransformation(getContext()).dip2px(30);
 
         //  剩下的宽度
         float elseWidth = maxWidth;
         LinearLayout.LayoutParams textViewLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
-        textViewLP.setMargins((int) dipToPx(8), 0, 0, 0);
+        textViewLP.setMargins((int) new UnitTransformation(getContext()).dip2px(8), 0, 0, 0);
 
         for (int i = 0; i < data.size(); i++) {
             //  若当前为新起的一行，先添加旧的那行
@@ -162,7 +163,7 @@ public class SearchFragment extends Fragment {
                 elseWidth = maxWidth;
             } else {
             //  剩余宽度减去文本框的宽度+间隔=新的剩余宽度
-                elseWidth -= textView.getMeasuredWidth() + dipToPx(8);
+                elseWidth -= textView.getMeasuredWidth() + new UnitTransformation(getContext()).dip2px(8);
                 if (rowLL.getChildCount() != 0) {
                     textView.setLayoutParams(textViewLP);
                 }
@@ -172,11 +173,6 @@ public class SearchFragment extends Fragment {
 
         // 添加最后一行，但要防止重复添加
         llParent.addView(rowLL);
-    }
-
-    // dp转px
-    private float dipToPx(int dipValue) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, this.getResources().getDisplayMetrics());
     }
 
     //  获得屏幕宽度

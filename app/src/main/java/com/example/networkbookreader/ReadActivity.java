@@ -26,6 +26,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.networkbookreader.adapter.ChapterItemAdapter;
 import com.example.networkbookreader.component.SettingDialog;
 import com.example.networkbookreader.db.BookInfoDatabase;
+import com.example.networkbookreader.util.UnitTransformation;
 import com.example.networkbookreader.vo.ChapterItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -182,7 +183,7 @@ public class ReadActivity extends AppCompatActivity{
                 //进度条的刻度值
                 float max =Math.abs(seekBar.getMax());
                 //这不叫thumb的宽度,叫seekbar距左边宽度,实验了一下，seekbar 不是顶格的，两头都存在一定空间，所以xml 需要用paddingStart 和 paddingEnd 来确定具体空了多少值,我这里设置15dp;
-                float thumb = dip2px(bottomSheetDialog.getContext(),25);
+                float thumb = new UnitTransformation(bottomSheetDialog.getContext()).dip2px(25);
                 //每移动1个单位，text应该变化的距离 = (seekBar的宽度 - 两头空的空间) / 总的progress长度
                 float average = (((float) seekBar.getWidth())-2*thumb)/max;
                 //textview 应该所处的位置 = seekbar最左端 + seekbar左端空的空间 + 当前progress应该加的长度 - textview宽度的一半(保持居中作用)
@@ -235,7 +236,7 @@ public class ReadActivity extends AppCompatActivity{
         LinearLayout more_linearLayout = bottomSheetDialog.findViewById(R.id.more_setting_linearLayout);
         Objects.requireNonNull(more_linearLayout).setOnClickListener(view -> {
             bottomSheetDialog.dismiss();
-            settingDialog.setTextSize(px2sp(getApplicationContext(),contentTextView.getTextSize()));
+            settingDialog.setTextSize(new UnitTransformation(getApplicationContext()).px2sp(contentTextView.getTextSize()));
             settingDialog.show();
         });
     }
@@ -285,15 +286,5 @@ public class ReadActivity extends AppCompatActivity{
                 e.printStackTrace();
             }
         }).start();
-    }
-
-    private int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-    public int px2sp(Context context,float pxValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (pxValue / fontScale + 0.5f);
     }
 }
