@@ -30,6 +30,7 @@ public class NetworkRequestUtil {
     public abstract static class OnHttpUrlListener {
         public void success(ArrayList<ChapterItem> chapter_list) {}
         public void success(List<BookIntro> list, int i) {}
+        public void success(List<BookIntro> list) {}
         public void fail() {}
     }
     // 设置监听器
@@ -69,7 +70,13 @@ public class NetworkRequestUtil {
                         return false;
                     }
                 case SEARCH:
-                    break;
+                    try {
+                        getSearchBookList(url);
+                        return true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
                 case CATALOGUE:
                     try {
                         getCatalogue(url);
@@ -95,6 +102,7 @@ public class NetworkRequestUtil {
                         onHttpUrlListener.success(bookIntroList, max_page);
                         break;
                     case SEARCH:
+                        onHttpUrlListener.success(bookIntroList);
                         break;
                     case CATALOGUE:
                         onHttpUrlListener.success(chapter_list);
@@ -136,6 +144,23 @@ public class NetworkRequestUtil {
                         i.selectFirst(".img_span a img").attr("data-original"),
                         i.selectFirst(".img_span a").attr("href")
                 );
+                bookIntroList.add(bookIntro);
+            }
+        }
+
+        // 搜索书籍
+        private void getSearchBookList(String url) throws IOException {
+            Document doc = Jsoup.connect(url).get();
+            Elements search_element_list = doc.select("li");
+            bookIntroList = new ArrayList<>();
+            for (Element i : search_element_list) {
+                String name = i.selectFirst("h3").text();
+                String detail = i.selectFirst(".searchresult_p").text().trim();
+                String type = i.selectFirst("span").text();
+                String bookUrl = i.selectFirst("a").attr("href");
+                String imgUrl = i.selectFirst("a img").attr("data-original");
+                String author = i.selectFirst("p").text().split(" ")[0];
+                BookIntro bookIntro = new BookIntro(name, type,detail, author,imgUrl,bookUrl);
                 bookIntroList.add(bookIntro);
             }
         }
