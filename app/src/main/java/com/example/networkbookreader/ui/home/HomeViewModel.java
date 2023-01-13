@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.networkbookreader.db.BookIntro;
 import com.example.networkbookreader.util.HelpUtil;
+import com.example.networkbookreader.util.NetworkRequestUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -60,38 +61,17 @@ public class HomeViewModel extends ViewModel {
 
     public void getBookList(String typeString, boolean isEnd) {
         int page = (int) (Math.random()*max_page) + 1;
-        Log.d("myPage",String.valueOf(page));
-        Log.d("MaxPage", String.valueOf(max_page));
-        new Thread(() -> {
-            try {
-                String url  = "https://www.xxbiqu.com/" + (isEnd ? "quanben" :"sort") + "/" + type.get(typeString) +"/"+ page +"/";
-                Document doc = Jsoup.connect(url).get();
-                Log.d("url", url);
-                String a  = doc.select(".pages .pagelink a").last().attr("href");
-                max_page = new HelpUtil().getContainsNum(a);
-                Log.d("getMaxPage", String.valueOf(max_page));
+        String url  = "https://www.xxbiqu.com/" + (isEnd ? "quanben" :"sort") + "/" + type.get(typeString) +"/"+ page +"/";
+        NetworkRequestUtil networkRequestUtil = new NetworkRequestUtil().getInstance();
+        networkRequestUtil.getResult(NetworkRequestUtil.request.LIBRARY, url);
+        networkRequestUtil.setOnHttpUrlListener(new NetworkRequestUtil.OnHttpUrlListener() {
+            @Override
+            public void success(List<BookIntro> list, int i) {
+                super.success(list, i);
+                result_list.setValue(list);
+                max_page = i;
                 isOnlyOnePage = (max_page == 0);
-
-                List<BookIntro> myList = new ArrayList<>();
-
-                Elements li = doc.select(".flex li");
-                for (Element i: li) {
-                    BookIntro bookIntro = new BookIntro(
-                            i.selectFirst(".w100 a h2").text(),
-                            i.selectFirst(".img_span span").text(),
-                            i.selectFirst(".w100 .indent").text().trim(),
-                            i.selectFirst(".w100 .li_bottom a").text(),
-                            i.selectFirst(".img_span a img").attr("data-original"),
-                            i.selectFirst(".img_span a").attr("href")
-                            );
-                    Log.d("book", String.valueOf(bookIntro));
-                    myList.add(bookIntro);
-                }
-                result_list.postValue(myList);
-            } catch (IOException e) {
-                Log.d("title","请求失败");
-                e.printStackTrace();
             }
-        }).start();
+        });
     }
 }
