@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -26,16 +23,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.networkbookreader.adapter.ChapterItemAdapter;
 import com.example.networkbookreader.component.SettingDialog;
 import com.example.networkbookreader.db.BookInfoDatabase;
+import com.example.networkbookreader.util.NetworkRequestUtil;
 import com.example.networkbookreader.util.UnitTransformation;
 import com.example.networkbookreader.vo.ChapterItem;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -241,50 +233,26 @@ public class ReadActivity extends AppCompatActivity{
         });
     }
 
-    @SuppressLint("HandlerLeak")
-    private final Handler handler = new Handler() {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 1) {
+    private void getContent(String url) {
+        NetworkRequestUtil networkRequestUtil = new NetworkRequestUtil().getInstance();
+        networkRequestUtil.getResult(NetworkRequestUtil.request.CHAPTER_CONTENT, url);
+        networkRequestUtil.setOnHttpUrlListener(new NetworkRequestUtil.OnHttpUrlListener() {
+            @Override
+            public void success(String title, String content, String preUrl, String nextUrl) {
+                super.success(title, content, preUrl, nextUrl);
+                ReadActivity.this.title = title;
+                ReadActivity.this.content = content;
+                ReadActivity.this.preUrl = preUrl;
+                ReadActivity.this.nextUrl = nextUrl;
+
                 title_textview = findViewById(R.id.title);
                 title_textview.setText(title);
-
                 contentTextView.setText(content);
-
                 ScrollView scrollView = findViewById(R.id.scrollView);
                 scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_UP));
-
                 BookInfoDatabase bookInfoDatabase = BookInfoDatabase.getInstance(getApplicationContext());
                 bookInfoDatabase.updateBookReadProgressFromName(book_name, chapter_num);
             }
-        }
-    };
-
-    private void getContent(String url) {
-        new Thread(()->{
-            try {
-                Document doc = Jsoup.connect(url).get();
-
-                Element title_element = doc.selectFirst(".style_h1");
-                title = title_element.text();
-
-                Elements content_list = doc.select("article p");
-                content = "";
-                for(Element i : content_list) {
-                    content = content.concat("  "+i.text() + '\n');
-                }
-
-                Elements urls = doc.select(".read_nav a");
-                preUrl = urls.get(0).attr("href");
-                nextUrl = urls.get(urls.size()-1).attr("href");
-
-                Message msg = new Message();
-                msg.what = 1;
-                handler.sendMessage(msg);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        });
     }
 }

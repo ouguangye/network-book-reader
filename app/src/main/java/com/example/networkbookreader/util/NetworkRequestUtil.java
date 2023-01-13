@@ -31,6 +31,7 @@ public class NetworkRequestUtil {
         public void success(ArrayList<ChapterItem> chapter_list) {}
         public void success(List<BookIntro> list, int i) {}
         public void success(List<BookIntro> list) {}
+        public void success(String title, String content, String preUrl, String nextUrl){}
         public void fail() {}
     }
     // 设置监听器
@@ -56,6 +57,10 @@ public class NetworkRequestUtil {
         private List<BookIntro> bookIntroList;
         private ArrayList<ChapterItem> chapter_list;
         private int max_page;
+        private String title;
+        private String content;
+        private String preUrl;
+        private String nextUrl;
 
         @Override
         protected Boolean doInBackground(String... strings) {
@@ -86,7 +91,13 @@ public class NetworkRequestUtil {
                         return false;
                     }
                 case CHAPTER_CONTENT:
-                    break;
+                    try {
+                        getChapterContent(url);
+                        return true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
                 default:
                     break;
             }
@@ -108,6 +119,7 @@ public class NetworkRequestUtil {
                         onHttpUrlListener.success(chapter_list);
                         break;
                     case CHAPTER_CONTENT:
+                       onHttpUrlListener.success(title,content,preUrl,nextUrl);
                        break;
                     default:
                         break;
@@ -163,6 +175,24 @@ public class NetworkRequestUtil {
                 BookIntro bookIntro = new BookIntro(name, type,detail, author,imgUrl,bookUrl);
                 bookIntroList.add(bookIntro);
             }
+        }
+
+        // 请求 章节内容
+        private void getChapterContent(String url) throws IOException {
+            Document doc = Jsoup.connect(url).get();
+
+            Element title_element = doc.selectFirst(".style_h1");
+            title = title_element.text();
+
+            Elements content_list = doc.select("article p");
+            content = "";
+            for(Element i : content_list) {
+                content = content.concat("  "+i.text() + '\n');
+            }
+
+            Elements urls = doc.select(".read_nav a");
+            preUrl = urls.get(0).attr("href");
+            nextUrl = urls.get(urls.size()-1).attr("href");
         }
     }
 }
