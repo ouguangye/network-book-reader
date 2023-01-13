@@ -11,6 +11,7 @@
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic_bookshelf_black.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic_catalogue.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.23697916666666666" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic_empty_view.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/layer_progress.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/loading_process_dialog_color.xml" value="0.23697916666666666" />
@@ -19,6 +20,7 @@
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/shape_circle.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/textview_border.xml" value="0.23697916666666666" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/drawable/tv_bg.xml" value="0.23697916666666666" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout-v29/chapter_text_item.xml" value="0.109375" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/activity_catalogue.xml" value="0.1671195652173913" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/activity_main.xml" value="0.17074275362318841" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/activity_read.xml" value="0.13994565217391305" />
@@ -28,6 +30,7 @@
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/bookshelf_book_item.xml" value="0.1381340579710145" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/chaper_text_item.xml" value="0.17798913043478262" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/chapter_text_item.xml" value="0.13541666666666666" />
+        <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/empty_list_layout.xml" value="0.15625" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/fragment_bookshelf.xml" value="0.1431159420289855" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/fragment_dashboard.xml" value="0.13722826086956522" />
         <entry key="..\:/personal_program/android/NetWorkBookReader/app/src/main/res/layout/fragment_home.xml" value="0.1" />

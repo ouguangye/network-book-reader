@@ -54,6 +54,7 @@ public class BookshelfFragment extends Fragment {
             });
         });
 
+        binding.bookshelfGridview.setEmptyView(binding.emptyView.getRoot());
         binding.bookshelfGridview.setOnItemLongClickListener((adapterView, view, i, l)->{
             BookIntro bookIntro = (BookIntro) adapterView.getAdapter().getItem(i);
             AlertDialog alertDialog2 = new AlertDialog.Builder(getContext())

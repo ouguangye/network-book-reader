@@ -20,4 +20,6 @@
     <string name="set_text_size">设置文字大小</string>
     <string name="dialog_cancel">取消</string>
     <string name="dialog_confirm">确定</string>
+    <string name="no_data">No Data</string>
+    <string name="empty_tip">空空如也</string>
 </resources>
