@@ -1,34 +1,25 @@
 package com.example.networkbookreader;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.networkbookreader.adapter.ChapterItemAdapter;
 import com.example.networkbookreader.db.BookInfoDatabase;
 import com.example.networkbookreader.db.BookIntro;
+import com.example.networkbookreader.util.NetworkRequestUtil;
 import com.example.networkbookreader.vo.ChapterItem;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class CatalogueActivity extends AppCompatActivity {
@@ -73,16 +64,12 @@ public class CatalogueActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        getCatalogue();
-        dialog = ProgressDialog.show(CatalogueActivity.this, "", "加载中", true);
-    }
-
-    @SuppressLint("HandlerLeak")
-    private final Handler handler = new Handler() {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 1) {
+        NetworkRequestUtil networkRequestUtil = new NetworkRequestUtil().getInstance();
+        networkRequestUtil.getResult(NetworkRequestUtil.request.CATALOGUE, bookIntro.getBookUrl());
+        networkRequestUtil.setOnHttpUrlListener(new NetworkRequestUtil.OnHttpUrlListener() {
+            @Override
+            public void success(ArrayList<ChapterItem> chapter_list) {
+                CatalogueActivity.this.chapter_list = chapter_list;
                 ChapterItemAdapter chapterItemAdapter = new ChapterItemAdapter(getApplicationContext(), chapter_list);
                 GridView gridView = findViewById(R.id.grid);
                 gridView.setAdapter(chapterItemAdapter);
@@ -93,8 +80,17 @@ public class CatalogueActivity extends AppCompatActivity {
                 });
                 if (dialog != null) dialog.dismiss();
             }
-        }
-    };
+
+            @Override
+            public void fail() {
+                if (dialog != null) dialog.dismiss();
+                AlertDialog alertDialog = new AlertDialog.Builder(CatalogueActivity.this)
+                        .setMessage("加载失败，请检查网络，然后重新进入该页面试试").create();
+                alertDialog.show();
+            }
+        });
+        dialog = ProgressDialog.show(CatalogueActivity.this, "", "加载中", true);
+    }
 
     private void jumpToReadActivity(int i) {
         Intent intent = new Intent(getApplicationContext(), ReadActivity.class);
@@ -102,24 +98,5 @@ public class CatalogueActivity extends AppCompatActivity {
         intent.putExtra("name", bookIntro.getName());
         intent.putParcelableArrayListExtra("list", chapter_list);
         startActivity(intent);
-    }
-
-
-    private void getCatalogue() {
-        new Thread(()->{
-            try {
-                Document doc = Jsoup.connect(bookIntro.getBookUrl()).get();
-                Elements result_list = doc.select("#ul_all_chapters li a");
-                chapter_list = new ArrayList<>();
-                for(Element i : result_list) {
-                    chapter_list.add(new ChapterItem(i.attr("href"), i.text().trim()));
-                }
-                Message msg = new Message();
-                msg.what = 1;
-                handler.sendMessage(msg);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 }
