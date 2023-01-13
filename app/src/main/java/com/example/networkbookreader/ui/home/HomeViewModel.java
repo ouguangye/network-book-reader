@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.networkbookreader.db.BookIntro;
+import com.example.networkbookreader.util.HelpUnit;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -69,7 +70,7 @@ public class HomeViewModel extends ViewModel {
                 Document doc = Jsoup.connect(url).get();
                 Log.d("url", url);
                 String a  = doc.select(".pages .pagelink a").last().attr("href");
-                max_page = getContainsNum(a);
+                max_page = new HelpUnit().getContainsNum(a);
                 Log.d("getMaxPage", String.valueOf(max_page));
                 isOnlyOnePage = (max_page == 0);
 
@@ -94,15 +95,5 @@ public class HomeViewModel extends ViewModel {
                 e.printStackTrace();
             }
         }).start();
-    }
-
-    // 提取字符串中的数字
-    private int getContainsNum(String str){
-        String regExp="[^0-9]"; // 反向字符集。匹配未包含的数字，替换着里面的数字
-        Pattern pattern = Pattern.compile(regExp);
-        Matcher matcher = pattern.matcher(str);
-        String num = matcher.replaceAll("").trim();
-        if (num.equals("")) return 0;
-        return Integer.parseInt(num);
     }
 }
