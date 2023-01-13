@@ -59,11 +59,7 @@ public class CatalogueActivity extends AppCompatActivity {
 
         read_button = findViewById(R.id.read_button);
         read_button.setText(bookInfoDatabase.isRead(bookIntro)? "继续阅读":"开始阅读");
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         NetworkRequestUtil networkRequestUtil = new NetworkRequestUtil().getInstance();
         networkRequestUtil.getResult(NetworkRequestUtil.request.CATALOGUE, bookIntro.getBookUrl());
         networkRequestUtil.setOnHttpUrlListener(new NetworkRequestUtil.OnHttpUrlListener() {
@@ -90,6 +86,7 @@ public class CatalogueActivity extends AppCompatActivity {
             }
         });
         dialog = ProgressDialog.show(CatalogueActivity.this, "", "加载中", true);
+        dialog.show();
     }
 
     private void jumpToReadActivity(int i) {
