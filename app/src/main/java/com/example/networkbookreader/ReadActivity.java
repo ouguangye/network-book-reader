@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -125,10 +124,10 @@ public class ReadActivity extends AppCompatActivity{
 
         // 侧边栏适配 暗黑模式
         LinearLayout sidebar_linearLayout = findViewById(R.id.left_side);
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        Log.d("mynightMode", String.valueOf(getApplicationContext().getResources().getConfiguration().uiMode));
+        if (getApplicationContext().getResources().getConfiguration().uiMode == 0x11) {
             sidebar_linearLayout.setBackgroundColor(getResources().getColor(R.color.white));
         } else {
-            if (sidebar_linearLayout == null) Log.d("null", "!!!");
             sidebar_linearLayout.setBackgroundColor(getResources().getColor(R.color.black));
         }
 
@@ -206,7 +205,7 @@ public class ReadActivity extends AppCompatActivity{
         // 底部弹窗 夜间模式点击事件
         LinearLayout night_linearLayout = bottomSheetDialog.findViewById(R.id.night_mode_linearLayout);
         Objects.requireNonNull(night_linearLayout).setOnClickListener(view -> {
-            if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            if(this.getApplicationContext().getResources().getConfiguration().uiMode != 0x11) {
                 Toast.makeText(getApplicationContext(), "当前系统处于暗色模式下，该功能无法使用",Toast.LENGTH_SHORT).show();
                 return;
             }

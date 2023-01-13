@@ -39,7 +39,7 @@ public class ChapterItemAdapter extends MyAdapter{
         if (textSize != 0)  viewHolder.name.setTextSize(textSize);
 
         // 手动适配 暗色模式
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if (mContext.getResources().getConfiguration().uiMode == 0x11) {
            viewHolder.name.setTextColor(mContext.getResources().getColor(R.color.black));
         } else {
             viewHolder.name.setTextColor(mContext.getResources().getColor(R.color.white));
