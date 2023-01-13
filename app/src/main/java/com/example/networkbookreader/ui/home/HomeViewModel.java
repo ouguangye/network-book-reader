@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.networkbookreader.db.BookIntro;
-import com.example.networkbookreader.util.HelpUnit;
+import com.example.networkbookreader.util.HelpUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class HomeViewModel extends ViewModel {
     private int max_page;
@@ -70,7 +68,7 @@ public class HomeViewModel extends ViewModel {
                 Document doc = Jsoup.connect(url).get();
                 Log.d("url", url);
                 String a  = doc.select(".pages .pagelink a").last().attr("href");
-                max_page = new HelpUnit().getContainsNum(a);
+                max_page = new HelpUtil().getContainsNum(a);
                 Log.d("getMaxPage", String.valueOf(max_page));
                 isOnlyOnePage = (max_page == 0);
 
