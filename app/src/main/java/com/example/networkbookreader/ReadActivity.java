@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -37,8 +39,6 @@ public class ReadActivity extends AppCompatActivity{
     private int chapter_num;
     private String book_name;
 
-    private String content;
-    private String title;
     private String preUrl;
     private String nextUrl;
 
@@ -123,6 +123,16 @@ public class ReadActivity extends AppCompatActivity{
             drawerLayout.closeDrawers();
         });
 
+        // 侧边栏适配 暗黑模式
+        LinearLayout sidebar_linearLayout = findViewById(R.id.left_side);
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            sidebar_linearLayout.setBackgroundColor(getResources().getColor(R.color.white));
+        } else {
+            if (sidebar_linearLayout == null) Log.d("null", "!!!");
+            sidebar_linearLayout.setBackgroundColor(getResources().getColor(R.color.black));
+        }
+
+
         // 更多设置 弹窗
         settingDialog = new SettingDialog(ReadActivity.this);
         settingDialog.setConfirmClickListener(view1 -> {
@@ -196,6 +206,10 @@ public class ReadActivity extends AppCompatActivity{
         // 底部弹窗 夜间模式点击事件
         LinearLayout night_linearLayout = bottomSheetDialog.findViewById(R.id.night_mode_linearLayout);
         Objects.requireNonNull(night_linearLayout).setOnClickListener(view -> {
+            if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+                Toast.makeText(getApplicationContext(), "当前系统处于暗色模式下，该功能无法使用",Toast.LENGTH_SHORT).show();
+                return;
+            }
             isNightMode = !isNightMode;
             ImageView imageView = bottomSheetDialog.findViewById(R.id.night_icon);
             TextView textView = bottomSheetDialog.findViewById(R.id.night_text);
@@ -240,8 +254,6 @@ public class ReadActivity extends AppCompatActivity{
             @Override
             public void success(String title, String content, String preUrl, String nextUrl) {
                 super.success(title, content, preUrl, nextUrl);
-                ReadActivity.this.title = title;
-                ReadActivity.this.content = content;
                 ReadActivity.this.preUrl = preUrl;
                 ReadActivity.this.nextUrl = nextUrl;
 

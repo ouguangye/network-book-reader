@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.example.networkbookreader.R;
 import com.example.networkbookreader.vo.ChapterItem;
 
@@ -35,6 +37,14 @@ public class ChapterItemAdapter extends MyAdapter{
         ChapterItem chapterItem = (ChapterItem) list.get(i);
         viewHolder.name.setText(chapterItem.getName());
         if (textSize != 0)  viewHolder.name.setTextSize(textSize);
+
+        // 手动适配 暗色模式
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+           viewHolder.name.setTextColor(mContext.getResources().getColor(R.color.black));
+        } else {
+            viewHolder.name.setTextColor(mContext.getResources().getColor(R.color.white));
+        }
+
         return view;
     }
 
