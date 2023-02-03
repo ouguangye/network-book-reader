@@ -71,8 +71,9 @@ public class CatalogueActivity extends AppCompatActivity {
                 gridView.setAdapter(chapterItemAdapter);
                 gridView.setOnItemClickListener((adapterView, view, i, l) -> jumpToReadActivity(i));
                 read_button.setOnClickListener(view -> {
-                    bookIntro = bookInfoDatabase.getBookIntroDao().getDataFromName(bookIntro.getName());
-                    jumpToReadActivity(bookIntro.getReadProgress());
+                    BookIntro db_bookIntro = bookInfoDatabase.getBookIntroDao().getDataFromName(bookIntro.getName());
+                    if (db_bookIntro != null) jumpToReadActivity(db_bookIntro.getReadProgress());
+                    else jumpToReadActivity(0);
                 });
                 if (dialog != null) dialog.dismiss();
             }
