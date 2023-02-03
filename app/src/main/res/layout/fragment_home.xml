@@ -63,6 +63,11 @@
                 android:scrollingCache="false"
                 android:transcriptMode="alwaysScroll"
                 />
+
+            <include
+                android:id="@+id/empty_view"
+                layout="@layout/empty_list_layout"
+                />
         </LinearLayout>
 
     <LinearLayout

@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -73,6 +74,12 @@ public class HomeFragment extends Fragment {
         });
 
         ListView bookList = root.findViewById(R.id.book_list);
+        View emptyView = root.findViewById(R.id.empty_view);
+        if(emptyView != null) {
+            TextView tip =  emptyView.findViewById(R.id.tip);
+            tip.setText("初次加载过程可能比较慢，请耐心等待");
+        }
+        bookList.setEmptyView(emptyView);
         bookList.setOnItemClickListener((adapterView, view, i, l) -> {
                     BookIntro bookIntro = (BookIntro) adapterView.getAdapter().getItem(i);
                     Intent intent = new Intent(getContext(), CatalogueActivity.class);
