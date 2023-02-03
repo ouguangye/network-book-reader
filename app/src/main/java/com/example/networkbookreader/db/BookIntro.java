@@ -1,5 +1,7 @@
 package com.example.networkbookreader.db;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

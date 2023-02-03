@@ -153,7 +153,7 @@ public class NetworkRequestUtil {
                         i.selectFirst(".img_span span").text(),
                         i.selectFirst(".w100 .indent").text().trim(),
                         i.selectFirst(".w100 .li_bottom a").text(),
-                        i.selectFirst(".img_span a img").attr("data-original"),
+                        "https://www.xxbiqu.com/" + i.selectFirst(".img_span a img").attr("data-original"),
                         i.selectFirst(".img_span a").attr("href")
                 );
                 bookIntroList.add(bookIntro);
@@ -170,7 +170,7 @@ public class NetworkRequestUtil {
                 String detail = i.selectFirst(".searchresult_p").text().trim();
                 String type = i.selectFirst("span").text();
                 String bookUrl = i.selectFirst("a").attr("href");
-                String imgUrl = i.selectFirst("a img").attr("data-original");
+                String imgUrl = "https://www.xxbiqu.com/" + i.selectFirst("a img").attr("data-original");
                 String author = i.selectFirst("p").text().split(" ")[0];
                 BookIntro bookIntro = new BookIntro(name, type,detail, author,imgUrl,bookUrl);
                 bookIntroList.add(bookIntro);
