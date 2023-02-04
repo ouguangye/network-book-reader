@@ -32,3 +32,7 @@
     
     <image src="https://user-images.githubusercontent.com/78332649/216750564-51bb74ca-54c6-4058-8e17-62a2788be87e.jpg" width="40%"/>
     
+    
+ ## 下载
+ [apk下载链接](https://wwsd.lanzoue.com/if11U0ml4yeb)   密码:ejz0
+    
